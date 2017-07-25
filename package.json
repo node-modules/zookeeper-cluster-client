@@ -1,0 +1,45 @@
+{
+  "name": "zookeeper-cluster-client",
+  "version": "1.0.0",
+  "description": "",
+  "dependencies": {
+    "cluster-client": "^1.6.5",
+    "node-zookeeper-client": "^0.2.2"
+  },
+  "devDependencies": {
+    "autod": "^2.8.0",
+    "egg-bin": "^3.4.0",
+    "egg-ci": "^1.7.0",
+    "eslint": "^4.0.0",
+    "eslint-config-egg": "^4.2.0",
+    "webstorm-disable-index": "^1.2.0"
+  },
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "scripts": {
+    "autod": "autod",
+    "lint": "eslint .",
+    "test": "npm run lint -- --fix && egg-bin pkgfiles && npm run test-local",
+    "test-local": "egg-bin test",
+    "cov": "egg-bin cov",
+    "ci": "npm run lint && egg-bin pkgfiles --check && npm run cov",
+    "pkgfiles": "egg-bin pkgfiles"
+  },
+  "ci": {
+    "version": "6, 8"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:node-modules/zookeeper-cluster-client.git"
+  },
+  "bug": {
+    "url": "https://github.com/node-modules/zookeeper-cluster-client/issues"
+  },
+  "main": "lib/index.js",
+  "files": [
+    "lib"
+  ],
+  "author": "fengmk2",
+  "license": "MIT"
+}
