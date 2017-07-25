@@ -20,11 +20,88 @@
 [download-image]: https://img.shields.io/npm/dm/zookeeper-cluster-client.svg?style=flat-square
 [download-url]: https://npmjs.org/package/zookeeper-cluster-client
 
-## Usage
+## Install
 
 ```bash
 npm i zookeeper-cluster-client --save
 ```
+
+## Usage
+
+1\. Create a node using given path:
+
+```js
+const zookeeper = require('zookeeper-cluster-client');
+const client = zookeeper.createClient('localhost:2181');
+const path = process.argv[2];
+
+client.once('connected', () => {
+  console.log('Connected to the server.');
+  client.create(path, err => {
+    if (err) {
+      console.log('Failed to create node: %s due to: %s.', path, err);
+    } else {
+      console.log('Node: %s is successfully created.', path);
+    }
+    client.close();
+  });
+});
+
+client.connect();
+```
+
+2\. List and watch the children of given node:
+
+```js
+const zookeeper = require('zookeeper-cluster-client');
+const client = zookeeper.createClient('localhost:2181');
+const path = process.argv[2];
+
+function listChildren(client, path) {
+  client.getChildren(
+    path,
+    event => {
+      console.log('Got watcher event: %s', event);
+      listChildren(client, path);
+    },
+    (err, children, stat) => {
+      if (err) {
+        console.log('Failed to list children of %s due to: %s.', path, err);
+        return;
+      }
+      console.log('Children of %s are: %j.', path, children);
+    }
+  );
+}
+
+client.once('connected', () => {
+  console.log('Connected to ZooKeeper.');
+  listChildren(client, path);
+});
+
+client.connect();
+```
+
+## Support APIs
+
+- [ ] `createClient(connectionString, [options])`
+- [ ] `connect()`
+- [ ] `close()`: return promise
+- [ ] `create(path, [data], [acls], [mode], callback)`
+- [ ] `remove(path, [version], callback)`
+- [ ] `exists(path, [watcher], callback)`
+- [ ] `getChildren(path, [watcher], callback)`
+- [ ] `getData(path, [watcher], callback)`
+- [ ] `setData(path, data, [version], callback)`
+- [ ] `getACL(path, callback)`
+- [ ] `setACL(path, acls, [version], callback)`
+- [ ] `mkdirp(path, [data], [acls], [mode], callback)`
+- [ ] `addAuthInfo(scheme, auth)`
+- [ ] `State getState()`
+- [ ] `Buffer getSessionId()`
+- [ ] `Buffer getSessionPassword()`
+- [ ] `Number getSessionTimeout()`
+- [ ] `transaction()`
 
 ## License
 
