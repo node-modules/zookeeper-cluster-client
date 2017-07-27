@@ -88,14 +88,14 @@ client.connect();
 - [x] `connect()`
 - [x] `close()`: return promise
 - [x] `create(path, [data], [acls], [mode], callback)`
-- [ ] `remove(path, [version], callback)`
-- [ ] `exists(path, [watcher], callback)`
-- [ ] `getChildren(path, [watcher], callback)`
+- [x] `remove(path, [version], callback)`
+- [x] `setData(path, data, [version], callback)`
+- [x] `getACL(path, callback)`
+- [x] `setACL(path, acls, [version], callback)`
+- [x] `mkdirp(path, [data], [acls], [mode], callback)`
+- [x] `exists(path, [watcher], callback)`
+- [x] `getChildren(path, [watcher], callback)`
 - [x] `getData(path, [watcher], callback)`
-- [ ] `setData(path, data, [version], callback)`
-- [ ] `getACL(path, callback)`
-- [ ] `setACL(path, acls, [version], callback)`
-- [ ] `mkdirp(path, [data], [acls], [mode], callback)`
 - [ ] `addAuthInfo(scheme, auth)`
 - [ ] `State getState()`
 - [ ] `Buffer getSessionId()`
