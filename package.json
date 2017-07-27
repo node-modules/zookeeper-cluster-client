@@ -23,7 +23,7 @@
   },
   "scripts": {
     "autod": "autod",
-    "lint": "eslint .",
+    "lint": "eslint example lib test *.js",
     "test": "npm run lint && egg-bin pkgfiles && npm run test-local",
     "test-local": "DEBUG=zookeeper* egg-bin test",
     "cov": "egg-bin cov",
