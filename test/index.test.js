@@ -49,6 +49,8 @@ describe('test/index.test.js', () => {
   describe('getData()', () => {
     let client1;
     let client2;
+    const testpath = '/unittest4';
+    const testdata = 'unittest-data:' + Date();
 
     before(function* () {
       client1 = zookeeper.createClient();
@@ -56,9 +58,15 @@ describe('test/index.test.js', () => {
       yield client1.ready();
       yield client2.ready();
     });
-    // before(done => {
-    //   client2.mkdirp('/foo', zookeeper.CreateMode.PERSISTENT, done);
-    // });
+    before(done => {
+      client2.create(testpath, (err, meta) => {
+        console.log(err, meta);
+        client2.setData(testpath, new Buffer(testdata), (err, meta) => {
+          console.log(err, meta);
+          done();
+        });
+      });
+    });
 
     after(function* () {
       // close follwer first
@@ -76,14 +84,16 @@ describe('test/index.test.js', () => {
 
     it('should get path data without watcher work', function* () {
       const datas = [];
-      client1.getData('/foo', (err, data) => {
+      client1.getData(testpath, (err, data) => {
         assert(!err);
         assert(data);
+        assert(data.toString() === testdata);
         datas.push(data);
       });
-      client2.getData('/foo', (err, data) => {
+      client2.getData(testpath, (err, data) => {
         assert(!err);
         assert(data);
+        assert(data.toString() === testdata);
         datas.push(data);
       });
 
@@ -94,20 +104,22 @@ describe('test/index.test.js', () => {
     it('should get path data with watcher work', function* () {
       const datas = [];
       const events = [];
-      client1.getData('/foo', event => {
+      client1.getData(testpath, event => {
         assert(event);
         events.push(event);
       }, (err, data) => {
         assert(!err);
         assert(data);
+        assert(data.toString() === testdata);
         datas.push(data);
       });
-      client2.getData('/foo', event => {
+      client2.getData(testpath, event => {
         assert(event);
         events.push(event);
       }, (err, data, meta) => {
         assert(!err);
         assert(data);
+        assert(data.toString() === testdata);
         datas.push(data);
         console.log('data => %s, meta => %j', data.toString(), meta);
       });
@@ -115,11 +127,27 @@ describe('test/index.test.js', () => {
       yield sleep(500);
       assert(datas.length === 2);
       // change data
-      // client1.setData('/foo', 'changed', function() {
-      //   console.log(arguments);
-      // });
-      // yield sleep(500)
-      // assert(events.length === 2);
+      client1.setData(testpath, new Buffer('changed'), err => {
+        assert(!err);
+      });
+      yield sleep(500);
+      assert(events.length === 2);
+
+      const datas2 = [];
+      client1.getData(testpath, (err, data) => {
+        assert(!err);
+        assert(data);
+        assert(data.toString() === 'changed');
+        datas2.push(data);
+      });
+      client2.getData(testpath, (err, data) => {
+        assert(!err);
+        assert(data);
+        assert(data.toString() === 'changed');
+        datas2.push(data);
+      });
+      yield sleep(500);
+      assert(datas2.length === 2);
     });
   });
 });
