@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "Sharing one zookeeper connection among Multi-Process on Node.js",
   "dependencies": {
-    "node-zookeeper-client": "^0.2.2"
+    "cluster-client": "^1.6.5",
+    "debug": "^2.6.8",
+    "node-zookeeper-client": "^0.2.2",
+    "sdk-base": "^3.2.0"
   },
   "devDependencies": {
     "autod": "^2.8.0",
