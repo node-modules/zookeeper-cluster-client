@@ -20,6 +20,8 @@
 [download-image]: https://img.shields.io/npm/dm/zookeeper-cluster-client.svg?style=flat-square
 [download-url]: https://npmjs.org/package/zookeeper-cluster-client
 
+Support [cluster-client](https://www.npmjs.com/package/cluster-client) process model on [node-zookeeper-client](https://www.npmjs.com/package/node-zookeeper-client).
+
 ## Install
 
 ```bash
@@ -102,6 +104,36 @@ client.connect();
 - [x] `Buffer getSessionPassword()`
 - [x] `Number getSessionTimeout()`
 - [ ] `transaction()`
+
+### Extends APIs
+
+Provides some useful APIs beyond node-zookeeper-client.
+
+- [x] `watch(path, listener)`
+
+  ```js
+  client.watch('/foo', (err, data, stat) => {
+    if (err) {
+      // handle error
+      return;
+    }
+    console.log('data => %s', data.toString());
+    console.log('stat => %s', stat);
+  });
+  ```
+
+- [x] `watchChildren(path, listener)`
+
+  ```js
+  client.watchChildren('/foo', (err, children, stat) => {
+    if (err) {
+      // handle error
+      return;
+    }
+    console.log('children => %j', children);
+    console.log('stat => %s', stat);
+  });
+  ```
 
 ## License
 

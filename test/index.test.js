@@ -644,4 +644,129 @@ describe('test/index.test.js', () => {
       assert(callbackCount === 3);
     });
   });
+
+  describe('watchChildren()', () => {
+    let client1;
+    let client2;
+    const testpathRoot = '/unittest4-watchChildren';
+    const testpath = '/unittest4-watchChildren/foo1';
+    const testdata = 'unittest4-data-watchChildren:' + Date();
+
+    before(function* () {
+      client1 = zookeeper.createClient();
+      client2 = zookeeper.createClient();
+      yield client1.ready();
+      yield client2.ready();
+    });
+    before(done => {
+      done = pedding(3, done);
+      client2.mkdirp(testpathRoot, zookeeper.CreateMode.PERSISTENT, (err, p) => {
+        console.log(err, p);
+        client1.create(testpath, (err, meta) => {
+          console.log(err, meta);
+          client1.setData(testpath, new Buffer(testdata), (err, meta) => {
+            console.log(err, meta);
+            done();
+          });
+        });
+        client2.create(testpath + '2', (err, meta) => {
+          console.log(err, meta);
+          client2.setData(testpath + '2', new Buffer(testdata), (err, meta) => {
+            console.log(err, meta);
+            done();
+          });
+        });
+      });
+
+      // try to delete foo13
+      client2.remove(testpath + '3', err => {
+        console.log('remove foo13 error: %s', err);
+        done();
+      });
+    });
+
+    after(done => {
+      // try to delete foo13
+      client2.remove(testpath + '3', err => {
+        console.log('remove foo13 error: %s', err);
+        done();
+      });
+    });
+
+    after(function* () {
+      // close follwer first
+      if (client2) {
+        yield client2.close();
+        client2 = null;
+      }
+
+      if (client1) {
+        yield client1.close();
+        client1 = null;
+      }
+      console.log('close all watchChildren() clients');
+    });
+
+    it('should watch one path children', function* () {
+      const lists = [];
+      client1.watchChildren(testpathRoot, (err, dirs, stat) => {
+        assert(!err);
+        assert(dirs);
+        assert(dirs.length === 2);
+        assert.deepEqual(dirs, [ 'foo1', 'foo12' ]);
+        assert(stat);
+        assert(typeof stat.version === 'number');
+        lists.push(dirs);
+      });
+      client2.watchChildren(testpathRoot, (err, dirs, stat) => {
+        assert(!err);
+        assert(dirs);
+        assert(dirs.length === 2);
+        assert.deepEqual(dirs, [ 'foo1', 'foo12' ]);
+        assert(stat);
+        assert(typeof stat.version === 'number');
+        lists.push(dirs);
+      });
+      yield sleep(100);
+      // exists and watcher again
+      client2.watchChildren(testpathRoot, (err, dirs, stat) => {
+        assert(!err);
+        assert(dirs);
+        assert(dirs.length === 2);
+        assert.deepEqual(dirs, [ 'foo1', 'foo12' ]);
+        assert(stat);
+        assert(typeof stat.version === 'number');
+        lists.push(dirs);
+      });
+      client1.unWatchAll();
+      client2.unWatchAll();
+      yield sleep(500);
+      assert(lists.length === 3);
+
+      let count = 0;
+      client2.watchChildren(testpathRoot, (err, dirs, stat) => {
+        count++;
+        assert(!err);
+        assert(dirs);
+        if (count === 1) {
+          assert(dirs.length === 2);
+          assert.deepEqual(dirs, [ 'foo1', 'foo12' ]);
+        } else {
+          assert(dirs.length === 3);
+          assert.deepEqual(dirs, [ 'foo13', 'foo1', 'foo12' ]);
+        }
+        assert(stat);
+        assert(typeof stat.version === 'number');
+      });
+      // add dir
+      client2.create(testpath + '3', err => {
+        assert(!err);
+        client2.setData(testpath + '3', new Buffer(testdata), err => {
+          assert(!err);
+        });
+      });
+      yield sleep(500);
+      client2.unWatchAll();
+    });
+  });
 });
