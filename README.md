@@ -97,10 +97,10 @@ client.connect();
 - [x] `getChildren(path, [watcher], callback)`
 - [x] `getData(path, [watcher], callback)`
 - [ ] `addAuthInfo(scheme, auth)`
-- [ ] `State getState()`
-- [ ] `Buffer getSessionId()`
-- [ ] `Buffer getSessionPassword()`
-- [ ] `Number getSessionTimeout()`
+- [x] `State getState()`
+- [x] `Buffer getSessionId()`
+- [x] `Buffer getSessionPassword()`
+- [x] `Number getSessionTimeout()`
 - [ ] `transaction()`
 
 ## License
