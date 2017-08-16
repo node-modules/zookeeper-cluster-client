@@ -30,7 +30,7 @@ if (cluster.isMaster) {
 } else {
   const client = zookeeper.createClient();
   client.once('connected', () => {
-    console.log(`Worker ${process.pid} zookeeper connected`);
+    console.log(`Worker ${process.pid} zookeeper connected, leader: ${client.isClusterClientLeader}`);
     getData(client, '/foo');
   });
   client.ready(() => {
