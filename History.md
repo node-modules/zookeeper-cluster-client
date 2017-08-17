@@ -1,4 +1,10 @@
 
+1.0.2 / 2017-08-17
+==================
+
+**fixes**
+  * [[`d0ecf19`](http://github.com/node-modules/zookeeper-cluster-client/commit/d0ecf194d5b919051c460fc4eca5e860f4714ce3)] - fix: should create new zk client after expired (#2) (fengmk2 <<fengmk2@gmail.com>>)
+
 1.0.1 / 2017-08-16
 ==================
 
