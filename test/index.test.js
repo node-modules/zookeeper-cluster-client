@@ -277,6 +277,86 @@ describe('test/index.test.js', () => {
     });
   });
 
+  describe('watch()', () => {
+    let client1;
+    let client2;
+    const testpath = '/unittest5';
+    const testdata = 'unittest-data:' + Date.now();
+
+    before(function* () {
+      client1 = zookeeper.createClient();
+      client2 = zookeeper.createClient();
+      yield client1.ready();
+      yield client2.ready();
+    });
+    before(done => {
+      client2.create(testpath, (err, meta) => {
+        console.log(err, meta);
+        client2.setData(testpath, new Buffer(testdata), (err, meta) => {
+          console.log(err, meta);
+          done();
+        });
+      });
+    });
+
+    after(function* () {
+      // close follwer first
+      if (client2) {
+        yield client2.close();
+        client2 = null;
+      }
+
+      if (client1) {
+        yield client1.close();
+        client1 = null;
+      }
+      console.log('close all clients');
+    });
+
+    it('should leader watch success', function* () {
+      client1.watch(testpath, (err, data) => {
+        assert.ifError(err);
+        client1.emit(testpath, data);
+      });
+
+      let val = yield client1.await(testpath);
+      assert.deepEqual(val, new Buffer(testdata));
+
+      client2.setData(testpath, new Buffer('123'), () => {});
+
+      val = yield client1.await(testpath);
+      assert.deepEqual(val, new Buffer('123'));
+
+      client2.setData(testpath, new Buffer(testdata), () => {});
+      val = yield client1.await(testpath);
+      assert.deepEqual(val, new Buffer(testdata));
+
+      client1.unWatch(testpath);
+    });
+
+    it('should follwer watch success', function* () {
+      const listener = (err, data) => {
+        assert.ifError(err);
+        client2.emit(testpath, data);
+      };
+      client2.watch(testpath, listener);
+
+      let val = yield client2.await(testpath);
+      assert.deepEqual(val, new Buffer(testdata));
+
+      client1.setData(testpath, new Buffer('123'), () => {});
+
+      val = yield client2.await(testpath);
+      assert.deepEqual(val, new Buffer('123'));
+
+      client1.setData(testpath, new Buffer(testdata), () => {});
+      val = yield client2.await(testpath);
+      assert.deepEqual(val, new Buffer(testdata));
+
+      client2.unWatch(testpath, listener);
+    });
+  });
+
   describe('exists()', () => {
     let client1;
     let client2;
