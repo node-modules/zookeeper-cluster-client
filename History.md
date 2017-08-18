@@ -1,4 +1,10 @@
 
+1.1.0 / 2017-08-18
+==================
+
+**features**
+  * [[`f3562ac`](http://github.com/node-modules/zookeeper-cluster-client/commit/f3562ac0fd3848570526e83fac0ec350f7a663fa)] - feat: unWatch support no listener (#3) (zōng yǔ <<gxcsoccer@users.noreply.github.com>>)
+
 1.0.2 / 2017-08-17
 ==================
 
