@@ -1,4 +1,10 @@
 
+1.1.1 / 2017-08-23
+==================
+
+**fixes**
+  * [[`54b961d`](http://github.com/node-modules/zookeeper-cluster-client/commit/54b961d20d316910c9b56551916d6425711a61c7)] - fix: typo on create and mkdir (leonlau <<liulianying@ofo.so>>)
+
 1.1.0 / 2017-08-18
 ==================
 

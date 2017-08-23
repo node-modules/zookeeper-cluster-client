@@ -1,6 +1,6 @@
 {
   "name": "zookeeper-cluster-client",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Sharing one zookeeper connection among Multi-Process on Node.js",
   "dependencies": {
     "cluster-client": "^1.6.7",
