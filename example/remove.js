@@ -18,7 +18,7 @@ function remove(client, path) {
         'client#%s Node: %s remove result: %j',
         client.clientId,
         path,
-        data,
+        data
       );
     }
   );
