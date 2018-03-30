@@ -37,16 +37,10 @@ const zookeeper = require('zookeeper-cluster-client');
 const client = zookeeper.createClient('localhost:2181');
 const path = process.argv[2];
 
-client.once('connected', () => {
-  console.log('Connected to the server.');
-  client.create(path, err => {
-    if (err) {
-      console.log('Failed to create node: %s due to: %s.', path, err);
-    } else {
-      console.log('Node: %s is successfully created.', path);
-    }
-    client.close();
-  });
+client.once('connected', async function() {
+  await client.create(path);
+  console.log('Node: %s is successfully created.', path);
+  await client.close();
 });
 
 client.connect();
@@ -59,21 +53,14 @@ const zookeeper = require('zookeeper-cluster-client');
 const client = zookeeper.createClient('localhost:2181');
 const path = process.argv[2];
 
-function listChildren(client, path) {
-  client.getChildren(
+async function listChildren(client, path) {
+  const children = await client.getChildren(
     path,
     event => {
       console.log('Got watcher event: %s', event);
       listChildren(client, path);
-    },
-    (err, children, stat) => {
-      if (err) {
-        console.log('Failed to list children of %s due to: %s.', path, err);
-        return;
-      }
-      console.log('Children of %s are: %j.', path, children);
-    }
-  );
+    });
+  console.log('Children of %s are: %j.', path, children);
 }
 
 client.once('connected', () => {
@@ -89,15 +76,15 @@ client.connect();
 - [x] `createClient(connectionString, [options])`
 - [x] `connect()`
 - [x] `close()`: return promise
-- [x] `create(path, [data], [acls], [mode], callback)`
-- [x] `remove(path, [version], callback)`
-- [x] `setData(path, data, [version], callback)`
-- [x] `getACL(path, callback)`
-- [x] `setACL(path, acls, [version], callback)`
-- [x] `mkdirp(path, [data], [acls], [mode], callback)`
-- [x] `exists(path, [watcher], callback)`
-- [x] `getChildren(path, [watcher], callback)`
-- [x] `getData(path, [watcher], callback)`
+- [x] `async create(path, [data], [acls], [mode])`
+- [x] `async remove(path, [version])`
+- [x] `async setData(path, data, [version])`
+- [x] `async getACL(path, [options])`
+- [x] `async setACL(path, acls, [version])`
+- [x] `async mkdirp(path, [data], [acls], [mode])`
+- [x] `async exists(path, [watcher])`
+- [x] `async getChildren(path, [watcher], [options])`
+- [x] `async getData(path, [watcher], [options])`
 - [ ] `addAuthInfo(scheme, auth)`
 - [x] `State getState()`
 - [x] `Buffer getSessionId()`
