@@ -152,6 +152,10 @@ describe('test/index.test.js', () => {
 
       await sleep(500);
       assert(datas.length === 2);
+
+      const ret = await client1.getData(testpath, { withStat: true });
+      assert(ret && ret.data && ret.data.toString() === testdata);
+      assert(ret.stat && typeof ret.stat.version === 'number');
     });
 
     it('should get path data with watcher work', async function() {
@@ -183,10 +187,18 @@ describe('test/index.test.js', () => {
       datas.push(data);
 
       assert(datas.length === 3);
+
+      const ret = await client1.getData(testpath, event => {
+        assert(event);
+        events.push(event);
+      }, { withStat: true });
+      assert(ret && ret.data && ret.data.toString() === testdata);
+      assert(ret.stat && typeof ret.stat.version === 'number');
+
       // change data
       await client1.setData(testpath, new Buffer('changed'));
       await sleep(500);
-      assert(events.length === 3);
+      assert(events.length === 4);
 
       const datas2 = [];
       data = await client1.getData(testpath);
@@ -546,6 +558,11 @@ describe('test/index.test.js', () => {
 
       await sleep(500);
       assert(lists.length === 2);
+
+      const ret = await client1.getChildren(testpathRoot, { withStat: true });
+      assert(ret && ret.children && ret.children.length === 2);
+      assert.deepEqual(ret.children, [ 'foo1', 'foo12' ]);
+      assert(ret.stat && typeof ret.stat.version === 'number');
     });
 
     it('should check path exists with watcher work', async function() {
@@ -583,6 +600,15 @@ describe('test/index.test.js', () => {
       assert.deepEqual(dirs, [ 'foo1', 'foo12' ]);
       lists.push(dirs);
 
+      const ret = await client2.getChildren(testpathRoot, event => {
+        assert(event);
+        assert(event.name === 'NODE_CHILDREN_CHANGED');
+        events.push(event);
+      }, { withStat: true });
+      assert(ret && ret.children && ret.children.length === 2);
+      assert.deepEqual(ret.children, [ 'foo1', 'foo12' ]);
+      assert(ret.stat && typeof ret.stat.version === 'number');
+
       await sleep(500);
       assert(lists.length === 3);
       // add dir
@@ -590,7 +616,7 @@ describe('test/index.test.js', () => {
       await client2.setData(testpath + '3', new Buffer(testdata));
 
       await sleep(500);
-      assert(events.length === 3);
+      assert(events.length === 4);
 
       const lists2 = [];
       dirs = await client1.getChildren(testpathRoot, event => {

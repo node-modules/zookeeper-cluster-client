@@ -79,12 +79,12 @@ client.connect();
 - [x] `async create(path, [data], [acls], [mode])`
 - [x] `async remove(path, [version])`
 - [x] `async setData(path, data, [version])`
-- [x] `async getACL(path)`
+- [x] `async getACL(path, [options])`
 - [x] `async setACL(path, acls, [version])`
 - [x] `async mkdirp(path, [data], [acls], [mode])`
 - [x] `async exists(path, [watcher])`
-- [x] `async getChildren(path, [watcher])`
-- [x] `async getData(path, [watcher])`
+- [x] `async getChildren(path, [watcher], [options])`
+- [x] `async getData(path, [watcher], [options])`
 - [ ] `addAuthInfo(scheme, auth)`
 - [x] `State getState()`
 - [x] `Buffer getSessionId()`
