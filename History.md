@@ -1,4 +1,13 @@
 
+2.0.0 / 2018-03-30
+==================
+
+**features**
+  * [[`07021b3`](http://github.com/node-modules/zookeeper-cluster-client/commit/07021b3c1991519090f0e91c668f58e3334ccc43)] - feat: migrate from callback to async / await (#5) (zōng yǔ <<gxcsoccer@users.noreply.github.com>>)
+
+**fixes**
+  * [[`ee46375`](http://github.com/node-modules/zookeeper-cluster-client/commit/ee463753491fd301b9f639e838a95775a320afc9)] - fix: upgrade deps (#6) (zōng yǔ <<gxcsoccer@users.noreply.github.com>>)
+
 1.1.1 / 2017-08-23
 ==================
 
