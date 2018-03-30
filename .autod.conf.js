@@ -6,10 +6,8 @@ module.exports = {
   test: [
     'test',
   ],
-  dep: [
-  ],
+  dep: [],
   devdep: [
-    'egg-ci',
     'egg-bin',
     'autod',
     'eslint',
@@ -17,6 +15,7 @@ module.exports = {
     'webstorm-disable-index',
   ],
   exclude: [
+    'zookeeper-3.4.6',
     './test/fixtures',
   ],
 };
