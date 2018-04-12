@@ -1,4 +1,10 @@
 
+2.0.1 / 2018-04-12
+==================
+
+**fixes**
+  * [[`2e17bce`](http://github.com/node-modules/zookeeper-cluster-client/commit/2e17bce7cbd0962de2c040ccc5499579876943f5)] - fix: fix connected event & watch bugs (#7) (zōng yǔ <<gxcsoccer@users.noreply.github.com>>)
+
 2.0.0 / 2018-03-30
 ==================
 
