@@ -24,6 +24,37 @@ describe('test/index.test.js', () => {
       console.log('close all clients');
     });
 
+    it('should listen connected ok', done => {
+      done = pedding(done, 4);
+      client1 = zookeeper.createClient();
+      client1.once('connected', () => {
+        client1.once('connected', () => { done(); });
+      });
+      client1.ready(err => {
+        if (err) {
+          done(err);
+        } else {
+          setImmediate(() => {
+            client1.once('connected', () => done());
+          });
+        }
+      });
+
+      client2 = zookeeper.createClient();
+      client2.once('connected', () => {
+        client2.once('connected', () => { done(); });
+      });
+      client2.ready(err => {
+        if (err) {
+          done(err);
+        } else {
+          setImmediate(() => {
+            client2.once('connected', () => done());
+          });
+        }
+      });
+    });
+
     it('should one client connected successfully', done => {
       done = pedding(2, done);
       client1 = zookeeper.createClient();
@@ -297,6 +328,22 @@ describe('test/index.test.js', () => {
         client1 = null;
       }
       console.log('close all clients');
+    });
+
+    it('should watch not-exist folder with error', done => {
+      done = pedding(done, 2);
+      client1.watch('/not-exist', (err, data) => {
+        assert(err);
+        assert(err.name === 'NO_NODE');
+        assert(!data);
+        done();
+      });
+      client2.watch('/not-exist', (err, data) => {
+        assert(err);
+        assert(err.name === 'NO_NODE');
+        assert(!data);
+        done();
+      });
     });
 
     it('should leader watch success', async function() {
