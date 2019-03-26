@@ -1,4 +1,10 @@
 
+3.0.0 / 2019-03-26
+==================
+
+**features**
+  * [[`4a4b295`](http://github.com/node-modules/zookeeper-cluster-client/commit/4a4b29535740e0d28a017b514aeb2b7382ef73fe)] - feat: singleMode for default, and clusterMode in Egg.js (#10) (zōng yǔ <<gxcsoccer@users.noreply.github.com>>)
+
 2.0.1 / 2018-04-12
 ==================
 
