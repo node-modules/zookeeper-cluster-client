@@ -1,4 +1,10 @@
 
+3.1.0 / 2019-06-19
+==================
+
+**features**
+  * [[`ae1fce1`](http://github.com/node-modules/zookeeper-cluster-client/commit/ae1fce14da3b35e75e3bd602df31aea8f9b85bf3)] - feat: support zk addAuthInfo (#12) (zōng yǔ <<gxcsoccer@users.noreply.github.com>>)
+
 3.0.0 / 2019-03-26
 ==================
 
