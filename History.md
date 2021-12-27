@@ -1,4 +1,10 @@
 
+3.1.1 / 2021-12-27
+==================
+
+**fixes**
+  * [[`64a2ce6`](http://github.com/node-modules/zookeeper-cluster-client/commit/64a2ce6413b4e45b468eb6b17a777888843afe74)] - fix: 🐛 fix map keys occur memory leak (循环遍历map keys 导致内存泄漏) (#14) (wuteng606 <<wuteng606@163.com>>)
+
 3.1.0 / 2019-06-19
 ==================
 
